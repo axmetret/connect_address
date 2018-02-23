@@ -1,0 +1,29 @@
+#!/bin/bash
+FIRST='[Connect]'
+SECOND='[D!connect]'
+PATH1=/root/.test1
+PATH2=/root/.test2
+rm $PATH1 && rm $PATH2
+clear
+HOST=$1
+func_conn ()
+{
+ping -c 1 $HOST | grep 'ttl' > $PATH1 || rm $PATH1 > $PATH2
+}
+func_body ()
+{
+func_conn
+if [[ -f $PATH1  ]]; then
+    echo -e "$HOST" "\e[32m$FIRST\e[0m" && rm $PATH1
+else
+    echo -e "$HOST" "\e[31m$SECOND\e[0m" && rm $PATH2
+fi
+}
+while : ; do
+clear
+func_body
+./sport $HOST || echo 'Error! Or no app sport!'
+sleep 1s && echo 'Rescan (2s)'
+sleep 1s && echo 'Rescan (1s)'
+sleep 1s
+done
